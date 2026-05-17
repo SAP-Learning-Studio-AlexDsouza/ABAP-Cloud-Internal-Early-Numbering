@@ -5,13 +5,12 @@
 
 ---
 
-## ⚠️ Prerequisite — SNRO Configuration (Do This First!)
+## ⚠️ Prerequisite —  Configuration (Do This First!)
 
 Before deploying any code, you **must** enable buffering on the Number Range Object.
 Without this, the app will crash with dump `BEHAVIOR_ILLEGAL_STATEMENT`.
 
 ```
-Transaction : SNRO
 Object      : ZNU_RANGE
 Action      : Edit → Buffering → Main Memory Buffering
 Buffer Size : 10
@@ -75,7 +74,7 @@ CLASS lhc_ZSLS_I_ORDER_HDR IMPLEMENTATION.
     CHECK entities_wo_orderid IS NOT INITIAL.
 
     " *** NUMBER RANGE PATH (always active) ***
-    " PREREQUISITE: Buffering MUST be enabled on object ZNU_RANGE in SNRO.
+    " PREREQUISITE: Buffering MUST be enabled on object ZNU_RANGE in  .
     " Without buffering, cl_numberrange_runtime=>number_get executes
     " UPDATE nriv on the primary DB connection, which violates the RAP
     " interaction phase contract and causes dump BEHAVIOR_ILLEGAL_STATEMENT.
@@ -175,7 +174,7 @@ if there is nothing left to number.
 | Return Code | Meaning | Action |
 |---|---|---|
 | `0` | All good | Continue |
-| `1` | Last number of interval issued | Continue (monitor SNRO interval) |
+| `1` | Last number of interval issued | Continue (monitor   interval) |
 | `2` | Number range fully exhausted | Fail all entities, return |
 
 ### 5. Partial Allocation Guard
@@ -197,9 +196,9 @@ still carries an empty `OrderId` — the framework loses track of the assignment
 ```
 returncode = '0'  → Numbers assigned successfully
 returncode = '1'  → Warning: last number of interval just issued
-                    → Action: extend interval in SNRO before it runs out
+                    → Action: extend interval in   before it runs out
 returncode = '2'  → Error: number range exhausted
-                    → Action: add new interval in SNRO immediately
+                    → Action: add new interval in   immediately
 ```
 
 ---
@@ -208,8 +207,8 @@ returncode = '2'  → Error: number range exhausted
 
 | Error | Cause | Fix |
 |---|---|---|
-| `BEHAVIOR_ILLEGAL_STATEMENT` | SNRO buffering is OFF | Enable Main Memory Buffering in SNRO |
-| `cx_number_ranges` exception | Number range object missing or no interval defined | Check `ZNU_RANGE` exists in SNRO with interval `01` |
+| `BEHAVIOR_ILLEGAL_STATEMENT` |   buffering is OFF | Enable Main Memory Buffering in   |
+| `cx_number_ranges` exception | Number range object missing or no interval defined | Check `ZNU_RANGE` exists in   with interval `01` |
 | IDs assigned as `0` or blank | `%key-OrderId` not synced | Ensure both `entity-OrderId` and `entity-%key-OrderId` are set |
 | Some records silently unnumbered | No partial allocation guard | Ensure the partial allocation block is present |
 
